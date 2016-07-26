@@ -264,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
             double lon = coordinates[1];
 
             String uri = "geo:" + lat + "," +lon + "?q=" + lat + "," + lon;
-            String shareBody = "My current location:\n" + uri + "\n\nThis service was provided by https://github.com/danielbarnett714";
+            String shareBody = "My current location:\n" + uri + "\n\nThis service was provided by https://github.com/danielbarnett714/Acastus";
             Intent sharingLocation = new Intent(android.content.Intent.ACTION_SEND);
             sharingLocation.setType("text/plain");
             sharingLocation.putExtra(android.content.Intent.EXTRA_SUBJECT, "My Current Location");

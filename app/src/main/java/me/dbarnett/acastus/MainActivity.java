@@ -5,6 +5,9 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -121,6 +124,8 @@ public class MainActivity extends AppCompatActivity {
         makeRequest = new MakeAPIRequest();
         ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        getLocationProvider(locationManager);
+
         geoLocation = new GeoLocation(locationManager);
         getInputs();
         updateRecentsList();
@@ -181,6 +186,35 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Get inputs.
      */
+    void getLocationProvider(LocationManager locationManager){
+        if (locationManager != null){
+            LocationListener locationListener = new LocationListener() {
+                public void onLocationChanged(Location location) {
+                    // Called when a new location is found by the network location provider.
+                }
+
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+                }
+
+                public void onProviderEnabled(String provider) {
+                }
+
+                public void onProviderDisabled(String provider) {
+                }
+            };
+
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }else {
+                Criteria criteria = new Criteria();
+                criteria.setPowerRequirement(Criteria.POWER_MEDIUM);
+                String bestProvider = locationManager.getBestProvider(criteria, false);
+                locationManager.requestLocationUpdates(bestProvider, 60000, 50, locationListener);
+
+            }
+
+        }
+    }
     private void getInputs(){
         searchText = (EditText) findViewById(R.id.searchText);
         handleIntent();
@@ -258,6 +292,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             coordinates = geoLocation.getLocation();
         }catch (IllegalArgumentException e){
+            System.out.println("Could not get location");
         }
         if (coordinates != null){
             double lat = coordinates[0];

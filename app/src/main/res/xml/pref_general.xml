@@ -1,0 +1,17 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="use_location"
+        android:summary="@string/allow_location_description"
+        android:title="@string/allow_location_title" />
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="store_recents"
+        android:summary="@string/store_recents_description"
+        android:title="@string/store_recents_title" />
+
+
+
+</PreferenceScreen>

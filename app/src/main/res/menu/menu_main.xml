@@ -1,0 +1,28 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="me.dbarnett.acastus.MainActivity">
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_share_location"
+        android:orderInCategory="100"
+        android:title="@string/action_share_location"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/clear_recents"
+        android:orderInCategory="100"
+        android:title="@string/clear_recents_setting"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/donate"
+        android:orderInCategory="100"
+        android:title="@string/donate_button"
+        app:showAsAction="never" />
+</menu>

@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">Acastus</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="action_share_location">Share Location</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_header_server">Server</string>
+
+    <string name="allow_location_title">Allow Location</string>
+    <string name="allow_location_description">Use your location to return results near you.</string>
+
+    <string name="store_recents_title">Save Recents</string>
+    <string name="store_recents_description">Save recent results for later use.</string>
+
+
+    <string name="server_url_setting">https://search.mapzen.com</string>
+    <string name="server_url_default">Server Address</string>
+
+    <string name="clear_recents_setting">Clear Recents</string>
+
+    <string name="donate_button">Donate</string>
+
+
+    <string-array name="theme">
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
+</resources>

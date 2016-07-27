@@ -3,7 +3,6 @@ package me.dbarnett.acastus;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
-import android.widget.Toast;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -90,8 +89,6 @@ public class GeoLocation extends MainActivity{
                 System.out.println("lat:" + lat + " , lon:" + lon);
                 return coordinates;
             } catch (NullPointerException e) {
-                Toast.makeText(GeoLocation.this, "Cannot get location.",
-                        Toast.LENGTH_LONG).show();
                 e.printStackTrace();
                 return null;
             }

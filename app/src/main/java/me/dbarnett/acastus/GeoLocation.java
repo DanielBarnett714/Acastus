@@ -2,15 +2,19 @@ package me.dbarnett.acastus;
 
 import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
-
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.widget.Toast;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 /**
  * Author: Daniel Barnett
  */
-public class GeoLocation extends MainActivity{
+public class GeoLocation extends MainActivity implements LocationListener{
     /**
      * The Location manager.
      */
@@ -24,6 +28,7 @@ public class GeoLocation extends MainActivity{
     GeoLocation(LocationManager locationManager){
         this.locationManager = locationManager;
     }
+
 
     /**
      * Distance double.
@@ -69,32 +74,84 @@ public class GeoLocation extends MainActivity{
      * @return the double [ ]
      */
     public Double[] getLocation() {
+        Criteria criteria;
+        String bestProvider;
+        double latitude, longitude;
         try {
-            String bestProvider;
-            Location location;
-            Criteria criteria = new Criteria();
-            try {
-                bestProvider = locationManager.getBestProvider(criteria, false);
-                location = locationManager.getLastKnownLocation(bestProvider);
-            }catch (IllegalArgumentException e){
-                return null;
-            }
-            Double lat, lon;
-            Double[] coordinates = new Double[2];
-            try {
-                lat = location.getLatitude();
-                lon = location.getLongitude();
-                coordinates[0] = lat;
-                coordinates[1] = lon;
-                System.out.println("lat:" + lat + " , lon:" + lon);
-                return coordinates;
-            } catch (NullPointerException e) {
-                e.printStackTrace();
+            if (MainActivity.isLocationEnabled()) {
+                criteria = new Criteria();
+                bestProvider = String.valueOf(locationManager.getBestProvider(criteria, true)).toString();
+
+                Location location = locationManager.getLastKnownLocation(bestProvider);
+                if (location != null) {
+                    latitude = location.getLatitude();
+                    longitude = location.getLongitude();
+                    System.out.println(latitude + " , " + longitude);
+                    Double[] coordinates = new Double[2];
+                    coordinates[0]  = latitude;
+                    coordinates[1] = longitude;
+                    return coordinates;
+                }
+                else{
+                    try{
+                        locationManager.requestLocationUpdates(bestProvider, 0, 0, this);
+                        Handler h = new Handler(Looper.getMainLooper());
+                        h.post(new Runnable() {
+                            public void run() {
+                                Toast.makeText(context, "Need to get access first.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }catch (RuntimeException e){
+
+                    }
+                    return null;
+                }
+            }else {
                 return null;
             }
         }catch (SecurityException e){
-            System.out.println("Cannot request location");
+            Handler h = new Handler(Looper.getMainLooper());
+            h.post(new Runnable() {
+                public void run() {
+                    Toast.makeText(context, "Location not enabled.", Toast.LENGTH_SHORT).show();
+                }
+            });
             return null;
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            locationManager.removeUpdates(this);
+        }catch (SecurityException e){
+
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        try {
+            locationManager.removeUpdates(this);
+
+        }catch (SecurityException e){
+
+        }
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+      useLocation = true;
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+        useLocation = false;
     }
 }

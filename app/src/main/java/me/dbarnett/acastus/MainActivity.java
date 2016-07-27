@@ -2,22 +2,23 @@ package me.dbarnett.acastus;
 
 import android.Manifest;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.Menu;
@@ -38,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+
 /**
  * Author: Daniel Barnett
  */
@@ -45,7 +47,7 @@ import java.util.TimerTask;
 /**
  * The type Main activity.
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
     /**
      * The Labels.
      */
@@ -70,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
      * The Cur lon.
      */
     private double curLon;
+
+    private Double[] geoCoordinates;
     /**
      * The Results.
      */
@@ -85,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
     private Intent intent;
     private String action;
     private String type;
-    SharedPreferences prefs;
+    protected SharedPreferences prefs;
     /**
      * The Search text.
      */
@@ -109,7 +113,11 @@ public class MainActivity extends AppCompatActivity {
     /**
      * The Use location.
      */
-    private Boolean useLocation;
+    public Boolean useLocation;
+
+    protected static Context context;
+
+    LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,11 +130,8 @@ public class MainActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         makeRequest = new MakeAPIRequest();
-        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        getLocationProvider(locationManager);
-
-        geoLocation = new GeoLocation(locationManager);
+        context = getApplicationContext();
+        setupLocationUse();
         getInputs();
         updateRecentsList();
         startTimer();
@@ -186,43 +191,21 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Get inputs.
      */
-    void getLocationProvider(LocationManager locationManager){
-        if (locationManager != null){
-            LocationListener locationListener = new LocationListener() {
-                public void onLocationChanged(Location location) {
-                    // Called when a new location is found by the network location provider.
-                }
+    void setupLocationUse(){
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        geoLocation = new GeoLocation(locationManager);
+        if (useLocation && isLocationEnabled()) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
 
-                public void onStatusChanged(String provider, int status, Bundle extras) {
-                }
-
-                public void onProviderEnabled(String provider) {
-                }
-
-                public void onProviderDisabled(String provider) {
-                }
-            };
-
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return;
-            }else {
-                Criteria criteria = new Criteria();
-                criteria.setPowerRequirement(Criteria.POWER_MEDIUM);
-                String bestProvider = locationManager.getBestProvider(criteria, false);
-                locationManager.requestLocationUpdates(bestProvider, 0, 50, locationListener);
-
+            geoCoordinates = geoLocation.getLocation();
+            if (geoCoordinates != null) {
+                curLat = geoCoordinates[0];
+                curLon = geoCoordinates[1];
             }
-
         }
     }
-    private void getInputs(){
+
+    private void getInputs() {
         searchText = (EditText) findViewById(R.id.searchText);
         handleIntent();
         searchText.addTextChangedListener(new TextWatcher() {
@@ -247,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (canNav) {
-                    if (!lookupList.isEmpty()){
+                    if (!lookupList.isEmpty()) {
                         ResultNode tempNode = lookupList.get(0);
                         Intent searchResult = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + tempNode.lat + "," + tempNode.lon));
                         startActivity(searchResult);
@@ -260,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Clear recents.
      */
-    private void clearRecents(){
+    private void clearRecents() {
         SharedPreferences.Editor editor = prefs.edit();
         editor.remove("recents");
         editor.apply();
@@ -273,7 +256,7 @@ public class MainActivity extends AppCompatActivity {
                 Object o = resultsList.getItemAtPosition(position);
                 EditText searchQuery = (EditText) findViewById(R.id.searchText);
                 searchQuery.setText(o.toString());
-                if(lookupList.isEmpty()){
+                if (lookupList.isEmpty()) {
                     return;
                 }
                 ResultNode tempNode = lookupList.get(position);
@@ -281,9 +264,9 @@ public class MainActivity extends AppCompatActivity {
                 searchText.setText("");
 
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + tempNode.lat + "," + tempNode.lon));
-                try{
+                try {
                     startActivity(browserIntent);
-                }catch (ActivityNotFoundException e){
+                } catch (ActivityNotFoundException e) {
                     Toast.makeText(MainActivity.this, "Must have Maps/Navigation App Installed",
                             Toast.LENGTH_LONG).show();
                 }
@@ -291,21 +274,37 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public static boolean isLocationEnabled() {
+        int locationMode = 0;
+        String locationProviders;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            try {
+                locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
+            } catch (Settings.SettingNotFoundException e) {
+                e.printStackTrace();
+            }
+            return locationMode != Settings.Secure.LOCATION_MODE_OFF;
+        } else {
+            locationProviders = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+            return !TextUtils.isEmpty(locationProviders);
+        }
+    }
+
     /**
      * Share location.
      */
-    private void shareLocation(){
+    protected void shareLocation() {
         Double[] coordinates = null;
         try {
             coordinates = geoLocation.getLocation();
-        }catch (IllegalArgumentException e){
+        } catch (NullPointerException e) {
             System.out.println("Could not get location");
         }
-        if (coordinates != null){
+        if (coordinates != null) {
             double lat = coordinates[0];
             double lon = coordinates[1];
 
-            String uri = "geo:" + lat + "," +lon + "?q=" + lat + "," + lon;
+            String uri = "geo:" + lat + "," + lon + "?q=" + lat + "," + lon;
             String shareBody = "My current location:\n" + uri + "\n\nThis service was provided by https://github.com/danielbarnett714/Acastus";
             Intent sharingLocation = new Intent(android.content.Intent.ACTION_SEND);
             sharingLocation.setType("text/plain");
@@ -318,7 +317,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Handle intent.
      */
-    private void handleIntent(){
+    private void handleIntent() {
         intent = getIntent();
         action = intent.getAction();
         type = intent.getType();
@@ -335,7 +334,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Reset time.
      */
-    private void resetTime(){
+    private void resetTime() {
         mapTime = true;
         canNav = false;
         EditText searchQuery = (EditText) findViewById(R.id.searchText);
@@ -348,13 +347,13 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Start timer.
      */
-    private void startTimer(){
+    private void startTimer() {
         final Timer t = new Timer();
         t.schedule(new TimerTask() {
             @Override
             public void run() {
                 mapTime = false;
-                if (searching == true){
+                if (searching == true) {
                     resetTime();
                     searching = false;
                 }
@@ -365,15 +364,14 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Start search.
      */
-    private void startSearch(){
-        if (searchText.getText().toString().isEmpty()){
+    private void startSearch() {
+        if (searchText.getText().toString().isEmpty()) {
             updateRecentsList();
             return;
         }
         if (mapTime == false) {
             resetTime();
-        }
-        else {
+        } else {
             searching = true;
         }
     }
@@ -403,7 +401,7 @@ public class MainActivity extends AppCompatActivity {
             String q = uri.getQuery();
             if (q != null) {
                 EditText searchQuery = (EditText) findViewById(R.id.searchText);
-                String addr = q.substring(q.indexOf("=") + 1).replace("\n",",");
+                String addr = q.substring(q.indexOf("=") + 1).replace("\n", ",");
                 searchQuery.setText(addr);
                 startSearch();
             }
@@ -417,12 +415,12 @@ public class MainActivity extends AppCompatActivity {
      *
      * @param name the name
      */
-    private void setRecents(String name){
+    private void setRecents(String name) {
         SharedPreferences.Editor editor = prefs.edit();
-        if (prefs.getBoolean("store_recents", true) == false){
+        if (prefs.getBoolean("store_recents", true) == false) {
             return;
         }
-        if (recents.contains(name)){
+        if (recents.contains(name)) {
             recents.remove(name);
         }
         recents.add(0, name);
@@ -438,7 +436,7 @@ public class MainActivity extends AppCompatActivity {
      *
      * @param data the data
      */
-    private void updateList(String[] data){
+    private void updateList(String[] data) {
         ArrayAdapter<?> adapter = new ArrayAdapter<Object>(this, android.R.layout.simple_selectable_list_item, data);
         resultsList = (ListView) findViewById(R.id.resultsList);
         resultsList.setAdapter(adapter);
@@ -448,8 +446,8 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Update results list.
      */
-    private void updateResultsList(){
-        if (searchText.getText().toString().isEmpty()){
+    private void updateResultsList() {
+        if (searchText.getText().toString().isEmpty()) {
             updateRecentsList();
             return;
         }
@@ -459,19 +457,18 @@ public class MainActivity extends AppCompatActivity {
         resultsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                Object result = resultsList.getItemAtPosition(position);
-                EditText searchQuery = (EditText) findViewById(R.id.searchText);
-                searchQuery.setText(result.toString());
-                if(lookupList.isEmpty()){
+                if (lookupList.isEmpty()) {
                     return;
                 }
                 ResultNode tempNode = lookupList.get(position);
                 setRecents(tempNode.name);
+                EditText searchQuery = (EditText) findViewById(R.id.searchText);
+                searchQuery.setText(tempNode.name);
                 try {
                     Intent openInMaps = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + tempNode.lat + "," + tempNode.lon));
                     startActivity(openInMaps);
                     searchText.setText("");
-                }catch (ActivityNotFoundException e){
+                } catch (ActivityNotFoundException e) {
                     Toast.makeText(MainActivity.this, "You must have a Maps/Navigation App installed.",
                             Toast.LENGTH_LONG).show();
                 }
@@ -482,11 +479,11 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Update recents list.
      */
-    private void updateRecentsList(){
+    private void updateRecentsList() {
         String recentsStore = prefs.getString("recents", null);
         JSONArray mJSONArray = null;
         resultsList = (ListView) findViewById(R.id.resultsList);
-        if (recentsStore != null){
+        if (recentsStore != null) {
             try {
                 mJSONArray = new JSONArray(recentsStore);
             } catch (JSONException e) {
@@ -494,8 +491,8 @@ public class MainActivity extends AppCompatActivity {
             }
             recents = null;
             recents = new ArrayList<>();
-            if (mJSONArray != null){
-                for (int i=0;i<mJSONArray.length();i++){
+            if (mJSONArray != null) {
+                for (int i = 0; i < mJSONArray.length(); i++) {
                     try {
                         recents.add(mJSONArray.get(i).toString());
                     } catch (JSONException e) {
@@ -514,7 +511,7 @@ public class MainActivity extends AppCompatActivity {
                     searchQuery.setText(result.toString());
                 }
             });
-        }else {
+        } else {
             resultsList = (ListView) findViewById(R.id.resultsList);
             resultsList.clearChoices();
         }
@@ -546,7 +543,7 @@ public class MainActivity extends AppCompatActivity {
             if (useLocation) {
                 Double distance = geoLocation.distance(curLat, lat, curLon, lon);
                 labels.add(name + " : " + distance + " mi");
-            }else {
+            } else {
                 labels.add(name);
             }
             lookupList.add(tempNode);
@@ -571,26 +568,34 @@ public class MainActivity extends AppCompatActivity {
      * @param input the input
      * @return the string
      */
-    private String setSearchQuery(String input){
+    private String setSearchQuery(String input) {
         Double[] coordinates = null;
         String serverAddress = prefs.getString("server_url", null);
-        if (serverAddress == null){
+        if (serverAddress == null) {
             serverAddress = getResources().getString(R.string.server_url_setting);
         }
-        useLocation = prefs.getBoolean("use_location", true);
-        if (useLocation){
+        if (isLocationEnabled()){
+            useLocation = prefs.getBoolean("use_location", true);
+        }
+        else {
+            useLocation = false;
+        }
+        if (useLocation) {
             coordinates = geoLocation.getLocation();
-            if (coordinates != null){
+            if (coordinates != null) {
                 curLat = coordinates[0];
                 curLon = coordinates[1];
+            }else {
+                System.out.println("Coordinates are null");
             }
         }
         String searchQuery;
-        if (useLocation && coordinates != null){
+        if (useLocation) {
             searchQuery = serverAddress + "/v1/autocomplete?" + "focus.point.lat=" + curLat + "&focus.point.lon=" + curLon + "&text=" + input;
-        }else {
+        } else {
             searchQuery = serverAddress + "/v1/autocomplete?text=" + input;
         }
+        System.out.println(searchQuery);
         searchQuery = searchQuery.replace(' ', '+');
 
         return searchQuery;

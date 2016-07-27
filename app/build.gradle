@@ -8,8 +8,8 @@ android {
         applicationId "me.dbarnett.acastus"
         minSdkVersion 19
         targetSdkVersion 24
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "0.12"
     }
     buildTypes {
         release {

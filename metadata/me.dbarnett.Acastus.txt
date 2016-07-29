@@ -1,25 +1,17 @@
 Categories:Navigation
-License:MIT
-Web Site:https://github.com/DanielBarnett714/Acastus
+License:LGPL
+Web Site:https://danielbarnett714.github.io/Acastus/
 Source Code:https://github.com/DanielBarnett714/Acastus
 Issue Tracker:https://github.com/DanielBarnett714/Acastus/issues
-Donate:https://github.com/DanielBarnett714/Acastus
+Donate:https://danielbarnett714.github.io/Acastus/
 
 Auto Name:Acastus
 Summary:A free and open source address/POI search for navigation apps
 Description:
-A free and open source replacement for Google Maps and other geocoding services
+A private, free and open source replacement for Google Maps and other geocoding services
 that relies on Pelias, which you can run on your own server. It uses the pelias-api to fetch results to your phone, allowing
 you to search for places in Acastus. Then open and navigate to the result in your preffered 
 navigation app, such as OsmAnd or Maps.me.
 
 Repo Type:git
 Repo:https://github.com/DanielBarnett714/Acastus
-
-
-Auto Update Mode:None
-Update Check Mode:Tags
-Current Version:1.30
-Current Version Code:13
-
-

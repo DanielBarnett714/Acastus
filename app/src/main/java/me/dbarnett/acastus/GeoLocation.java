@@ -86,7 +86,6 @@ public class GeoLocation extends MainActivity implements LocationListener{
                 if (location != null) {
                     latitude = location.getLatitude();
                     longitude = location.getLongitude();
-                    System.out.println(latitude + " , " + longitude);
                     Double[] coordinates = new Double[2];
                     coordinates[0]  = latitude;
                     coordinates[1] = longitude;
@@ -98,7 +97,7 @@ public class GeoLocation extends MainActivity implements LocationListener{
                         Handler h = new Handler(Looper.getMainLooper());
                         h.post(new Runnable() {
                             public void run() {
-                                Toast.makeText(context, "Need to get access first.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "Accesing location...", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }catch (RuntimeException e){

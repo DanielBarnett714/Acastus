@@ -209,6 +209,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     if (isGoodServer){
+                        serverUrl.setSummary(serverUrl.getEditText().getText().toString());
+
                         bindPreferenceSummaryToValue(findPreference("server_url"));
                         return true;
                     }

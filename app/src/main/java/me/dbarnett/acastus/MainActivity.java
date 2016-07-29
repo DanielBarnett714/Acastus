@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity{
             return true;
         }
         if (id == R.id.donate) {
-            Intent donateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/DanielBarnett714/Acastus"));
+            Intent donateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://danielbarnett714.github.io/Acastus/"));
             startActivity(donateIntent);
 
             return true;
@@ -194,9 +194,8 @@ public class MainActivity extends AppCompatActivity{
     void setupLocationUse(){
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         geoLocation = new GeoLocation(locationManager);
+        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         if (useLocation && isLocationEnabled()) {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-
             geoCoordinates = geoLocation.getLocation();
             if (geoCoordinates != null) {
                 curLat = geoCoordinates[0];
@@ -298,14 +297,13 @@ public class MainActivity extends AppCompatActivity{
         try {
             coordinates = geoLocation.getLocation();
         } catch (NullPointerException e) {
-            System.out.println("Could not get location");
         }
         if (coordinates != null) {
             double lat = coordinates[0];
             double lon = coordinates[1];
 
             String uri = "geo:" + lat + "," + lon + "?q=" + lat + "," + lon;
-            String shareBody = "My current location:\n" + uri + "\n\nThis service was provided by https://github.com/danielbarnett714/Acastus";
+            String shareBody = "My current location:\n" + uri;
             Intent sharingLocation = new Intent(android.content.Intent.ACTION_SEND);
             sharingLocation.setType("text/plain");
             sharingLocation.putExtra(android.content.Intent.EXTRA_SUBJECT, "My Current Location");
@@ -586,7 +584,7 @@ public class MainActivity extends AppCompatActivity{
                 curLat = coordinates[0];
                 curLon = coordinates[1];
             }else {
-                System.out.println("Coordinates are null");
+                useLocation = false;
             }
         }
         String searchQuery;

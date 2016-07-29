@@ -1,6 +1,7 @@
 # Acastus
+![](https://i.imgur.com/uZYbEwT.png)
 
-Acastus is a completely free and open source Address and POI lookup application for android.
+Acastus is a completely private, free and open source Address / POI lookup application for android.
 
 Use it to find nearby places, all without the privacy invasions and tracking features of other 
 apps. 
@@ -16,6 +17,7 @@ Details on setting up your own Pelias instance are here: https://github.com/peli
 
 Donations are welcome and greatly appreciated:
 
-Bitcoin: 1NjjuTxXm3ezpnVUGk4VmdEZUcym3SKZ8z
+[Bitcoin](https://blockchain.info/address/1NjjuTxXm3ezpnVUGk4VmdEZUcym3SKZ8z)
 
-PayPal: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=VTUD5XRYMT686&lc=US&item_name=Acastus&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted
+[PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=VTUD5XRYMT686&lc=US&item_name=Acastus&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted)
+

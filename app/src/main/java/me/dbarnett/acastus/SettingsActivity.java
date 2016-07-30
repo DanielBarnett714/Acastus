@@ -187,6 +187,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     public static class ServerPreferenceFragment extends PreferenceFragment {
         MakeAPIRequest makeAPIRequest = new MakeAPIRequest();
         boolean isGoodServer = true;
+        CheckServer checkServer = null;
         EditTextPreference serverUrl;
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -231,7 +232,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                     isGoodServer = false;
                     serverUrl.getEditText().setTextColor(getResources().getColor(R.color.colorAccent));
                     String urlAttempt = serverUrl.getEditText().getText().toString();
-                    new CheckServer().execute(urlAttempt);
+                    checkServer = null;
+                    checkServer = new CheckServer();
+                    checkServer.execute(urlAttempt);
                 }
 
                 @Override

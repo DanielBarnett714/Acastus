@@ -2,7 +2,7 @@
 
 
     <EditTextPreference
-        android:defaultValue="@string/server_url_setting"
+        android:defaultValue="@string/server_url_default"
         android:inputType="textUri"
         android:key="server_url"
         android:maxLines="1"

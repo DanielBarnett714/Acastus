@@ -8,7 +8,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="me.dbarnett.acastus.MainActivity"
-    tools:showIn="@layout/activity_main">
+    tools:showIn="@layout/activity_main"
+    android:longClickable="true">
 
     <ImageButton
         android:layout_width="wrap_content"
@@ -32,6 +33,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/searchText"
         android:hint="Enter Address/POI"
+        android:imeOptions="flagNoFullscreen"
         android:inputType="textFilter"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"

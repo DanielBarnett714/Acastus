@@ -1,8 +1,10 @@
 package me.dbarnett.acastus;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -234,8 +236,8 @@ public class MainActivity extends AppCompatActivity{
                 if (canNav) {
                     if (!lookupList.isEmpty()) {
                         ResultNode tempNode = lookupList.get(0);
-                        Intent searchResult = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + tempNode.lat + "," + tempNode.lon));
-                        startActivity(searchResult);
+                        String geoCoords = "geo:" + tempNode.lat + "," + tempNode.lon;
+                        openInNavApp(geoCoords);
                     }
                 }
             }
@@ -269,7 +271,7 @@ public class MainActivity extends AppCompatActivity{
                 try {
                     startActivity(browserIntent);
                 } catch (ActivityNotFoundException e) {
-                    Toast.makeText(MainActivity.this, "Must have Maps/Navigation App Installed",
+                    Toast.makeText(MainActivity.this, getResources().getString(R.string.server_url_default),
                             Toast.LENGTH_LONG).show();
                 }
             }
@@ -411,6 +413,32 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
+    void sharePlace(String shareBody) {
+        Intent sharingLocation = new Intent(android.content.Intent.ACTION_SEND);
+        sharingLocation.setType("text/plain");
+        sharingLocation.putExtra(android.content.Intent.EXTRA_SUBJECT, "Shared location");
+        sharingLocation.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+        startActivity(Intent.createChooser(sharingLocation, "Share this location"));
+    }
+
+    void copyToClipboard(String copyBody){
+        android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        clipboard.setText(copyBody);
+        Toast.makeText(MainActivity.this, "Copied to clipboard",
+                Toast.LENGTH_LONG).show();
+    }
+
+    void openInNavApp(String geoCoords){
+        try {
+            Intent openInMaps = new Intent(Intent.ACTION_VIEW, Uri.parse(geoCoords));
+            startActivity(openInMaps);
+            searchText.setText("");
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(MainActivity.this, getResources().getString(R.string.need_nav_app),
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+
     /**
      * Set recents.
      *
@@ -465,14 +493,52 @@ public class MainActivity extends AppCompatActivity{
                 setRecents(tempNode.name);
                 EditText searchQuery = (EditText) findViewById(R.id.searchText);
                 searchQuery.setText(tempNode.name);
-                try {
-                    Intent openInMaps = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + tempNode.lat + "," + tempNode.lon));
-                    startActivity(openInMaps);
-                    searchText.setText("");
-                } catch (ActivityNotFoundException e) {
-                    Toast.makeText(MainActivity.this, "You must have a Maps/Navigation App installed.",
-                            Toast.LENGTH_LONG).show();
+                String geoCoords = "geo:" + tempNode.lat + "," + tempNode.lon;
+                openInNavApp(geoCoords);
+            }
+        });
+
+        resultsList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> arg0, View arg1, final int position, long id) {
+                // TODO Auto-generated method stub
+                if (lookupList.isEmpty()) {
+                    return true;
                 }
+
+                CharSequence list_options[] = new CharSequence[] {"Navigate", "Share this location", "Copy address/place to clipboard", "Copy GPS coordinates "};
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Choose option");
+                builder.setItems(list_options, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ResultNode tempNode = lookupList.get(position);
+                        setRecents(tempNode.name);
+                        if (which == 0){
+                            String geoCoords = "geo:" + tempNode.lat + "," + tempNode.lon;
+                            openInNavApp(geoCoords);
+                        }
+
+                        if (which == 1){
+                            String shareBody = tempNode.name + "\n" + "geo:" + tempNode.lat + "," + tempNode.lon;
+                            sharePlace(shareBody);
+                        }
+
+                        if (which == 2){
+                            String copyBody = tempNode.name;
+                            copyToClipboard(copyBody);
+                        }
+
+                        if (which == 3){
+                            String copyBody = "geo:" + tempNode.lat + "," + tempNode.lon;
+                            copyToClipboard(copyBody);
+                        }
+                    }
+                });
+                builder.show();
+
+                return true;
             }
         });
     }
@@ -510,6 +576,44 @@ public class MainActivity extends AppCompatActivity{
                     Object result = resultsList.getItemAtPosition(position);
                     EditText searchQuery = (EditText) findViewById(R.id.searchText);
                     searchQuery.setText(result.toString());
+                }
+            });
+
+            resultsList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> arg0, View arg1, final int position, long id) {
+                    // TODO Auto-generated method stub
+
+                    CharSequence list_options[] = new CharSequence[] {"Search for this address/place", "Share this address/place", "Copy address/place to clipboard"};
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle("Choose option");
+                    builder.setItems(list_options, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String name = recents.get(position);
+                            setRecents(name);
+                            EditText searchQuery = (EditText) findViewById(R.id.searchText);
+
+                            if (which == 0){
+                                searchQuery.setText(name);
+                            }
+
+                            if (which == 1){
+                                String shareBody = name;
+                                sharePlace(shareBody);
+                            }
+
+                            if (which == 2){
+                                String copyBody = name;
+                                copyToClipboard(copyBody);
+                            }
+
+                        }
+                    });
+                    builder.show();
+
+                    return true;
                 }
             });
         } else {
@@ -570,10 +674,10 @@ public class MainActivity extends AppCompatActivity{
      * @return the string
      */
     private String setSearchQuery(String input) {
-        Double[] coordinates = null;
+        Double[] coordinates;
         String serverAddress = prefs.getString("server_url", null);
         if (serverAddress == null) {
-            serverAddress = getResources().getString(R.string.server_url_setting);
+            serverAddress = getResources().getString(R.string.server_url_default);
         }
         if (isLocationEnabled()){
             useLocation = prefs.getBoolean("use_location", true);

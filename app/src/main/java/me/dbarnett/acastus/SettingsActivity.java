@@ -213,6 +213,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                         serverUrl.setSummary(serverUrl.getEditText().getText().toString());
 
                         bindPreferenceSummaryToValue(findPreference("server_url"));
+                        Intent i = new Intent(getActivity(), MainActivity.class);
+                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(new Intent(getActivity(), MainActivity.class));
                         return true;
                     }
                     return false;

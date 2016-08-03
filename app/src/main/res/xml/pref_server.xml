@@ -8,6 +8,6 @@
         android:maxLines="1"
         android:selectAllOnFocus="true"
         android:singleLine="true"
-        android:title="@string/server_url_default" />
+        android:title="@string/server_url_setting" />
 
 </PreferenceScreen>

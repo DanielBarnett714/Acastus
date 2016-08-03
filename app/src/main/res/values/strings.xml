@@ -20,8 +20,8 @@
     <string name="store_recents_description">Save recent results for later use.</string>
 
 
-    <string name="server_url_setting">https://search.mapzen.com</string>
-    <string name="server_url_default">Server Address</string>
+    <string name="server_url_setting">Server Address</string>
+    <string name="server_url_default">https://search.mapzen.com</string>
 
     <string name="clear_recents_setting">Clear Recents</string>
 

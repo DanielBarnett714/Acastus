@@ -157,9 +157,6 @@ public class MainActivity extends AppCompatActivity{
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        if (BuildConfig.BUILD_TYPE.equals("playStore")){
-            menu.setGroupVisible(R.id.donateGroup, false);
-        }
         return true;
     }
 
@@ -308,12 +305,12 @@ public class MainActivity extends AppCompatActivity{
             double lon = coordinates[1];
 
             String uri = "geo:" + lat + "," + lon + "?q=" + lat + "," + lon;
-            String shareBody = "My current location:\n" + uri;
+            String shareBody = getResources().getString(R.string.my_current_location) + ":\n" + uri;
             Intent sharingLocation = new Intent(android.content.Intent.ACTION_SEND);
             sharingLocation.setType("text/plain");
-            sharingLocation.putExtra(android.content.Intent.EXTRA_SUBJECT, "My Current Location");
+            sharingLocation.putExtra(android.content.Intent.EXTRA_SUBJECT, getResources().getString(R.string.my_current_location));
             sharingLocation.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-            startActivity(Intent.createChooser(sharingLocation, "Share Your Location"));
+            startActivity(Intent.createChooser(sharingLocation, getResources().getString(R.string.share_my_location)));
         }
     }
 
@@ -416,15 +413,15 @@ public class MainActivity extends AppCompatActivity{
     void sharePlace(String shareBody) {
         Intent sharingLocation = new Intent(android.content.Intent.ACTION_SEND);
         sharingLocation.setType("text/plain");
-        sharingLocation.putExtra(android.content.Intent.EXTRA_SUBJECT, "Shared location");
+        sharingLocation.putExtra(android.content.Intent.EXTRA_SUBJECT, getResources().getString(R.string.shared_location));
         sharingLocation.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-        startActivity(Intent.createChooser(sharingLocation, "Share this location"));
+        startActivity(Intent.createChooser(sharingLocation, getResources().getString(R.string.share_this_location)));
     }
 
     void copyToClipboard(String copyBody){
         android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         clipboard.setText(copyBody);
-        Toast.makeText(MainActivity.this, "Copied to clipboard",
+        Toast.makeText(MainActivity.this, getResources().getString(R.string.copied_to_clipboard),
                 Toast.LENGTH_LONG).show();
     }
 
@@ -506,7 +503,7 @@ public class MainActivity extends AppCompatActivity{
                     return true;
                 }
 
-                CharSequence list_options[] = new CharSequence[] {"Navigate", "Share this location", "Copy address/place to clipboard", "Copy GPS coordinates "};
+                CharSequence list_options[] = new CharSequence[] {getResources().getString(R.string.navigate), getResources().getString(R.string.share_this_location), getResources().getString(R.string.copy_address_place), getResources().getString(R.string.copy_gps)};
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("Choose option");
@@ -584,7 +581,7 @@ public class MainActivity extends AppCompatActivity{
                 public boolean onItemLongClick(AdapterView<?> arg0, View arg1, final int position, long id) {
                     // TODO Auto-generated method stub
 
-                    CharSequence list_options[] = new CharSequence[] {"Search for this address/place", "Share this address/place", "Copy address/place to clipboard"};
+                    CharSequence list_options[] = new CharSequence[] {getResources().getString(R.string.search_address_place), getResources().getString(R.string.share_address_place), getResources().getString(R.string.copy_address_place)};
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     builder.setTitle("Choose option");
@@ -727,5 +724,6 @@ public class MainActivity extends AppCompatActivity{
             }
             return null;
         }
+
     }
 }

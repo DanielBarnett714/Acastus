@@ -9,10 +9,4 @@ public class ResultNode {
     public double lat;
     public double lon;
 
-    public void printResult(){
-        System.out.println("Name: " + name);
-        System.out.println("Lattitude: " + lat);
-        System.out.println("Longitude: " + lon);
-    }
-
 }

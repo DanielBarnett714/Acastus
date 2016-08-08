@@ -55,8 +55,6 @@ public class MakeAPIRequest {
             JSONObject engine = geocoding.getJSONObject("engine");
             String engineName = engine.getString("name");
             if (!engineName.equals("Pelias")){
-                System.out.println("Not Pelias");
-
                 return false;
             }
 

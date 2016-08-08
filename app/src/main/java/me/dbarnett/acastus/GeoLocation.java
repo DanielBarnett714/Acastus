@@ -97,7 +97,7 @@ public class GeoLocation extends MainActivity implements LocationListener{
                         Handler h = new Handler(Looper.getMainLooper());
                         h.post(new Runnable() {
                             public void run() {
-                                Toast.makeText(context, getResources().getString(R.string.accessing_location), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, R.string.accessing_location, Toast.LENGTH_SHORT).show();
                             }
                         });
                     }catch (RuntimeException e){

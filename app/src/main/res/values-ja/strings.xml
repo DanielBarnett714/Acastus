@@ -27,11 +27,30 @@
 
     <string name="need_nav_app">地図/ナビゲーションアプリをインストールする必要があります。</string>
 
+    <string name="my_current_location">私の現在の場所</string>
+
+    <string name="shared_location">共有した場所</string>
+
+    <string name="navigate">ナビゲート</string>
+
+    <string name="copy_address_place">住所/場所をクリップボードにコピー</string>
+
+    <string name="copy_gps">GPS 座標をクリップボードにコピー</string>
+
+    <string name="share_this_location">この場所を共有</string>
+
+    <string name="share_my_location">私の場所を共有</string>
+
+    <string name="copied_to_clipboard">クリップボードにコピーしました</string>
+
+    <string name="search_address_place">住所/場所の検索</string>
+
+    <string name="share_address_place">住所/場所の共有</string>
+
+    <string name="accessing_location">場所にアクセス中...</string>
+
+    <string name="location_not_enabled">場所が有効ではありません</string>
+
     <string name="donate_button">寄付する</string>
 
-
-    <string-array name="theme">
-        <item>ライト</item>
-        <item>ダーク</item>
-    </string-array>
 </resources>

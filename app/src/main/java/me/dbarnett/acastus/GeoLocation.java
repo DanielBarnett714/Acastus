@@ -97,7 +97,7 @@ public class GeoLocation extends MainActivity implements LocationListener{
                         Handler h = new Handler(Looper.getMainLooper());
                         h.post(new Runnable() {
                             public void run() {
-                                Toast.makeText(context, "Accesing location...", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, R.string.accessing_location, Toast.LENGTH_SHORT).show();
                             }
                         });
                     }catch (RuntimeException e){
@@ -112,7 +112,7 @@ public class GeoLocation extends MainActivity implements LocationListener{
             Handler h = new Handler(Looper.getMainLooper());
             h.post(new Runnable() {
                 public void run() {
-                    Toast.makeText(context, "Location not enabled.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.location_not_enabled, Toast.LENGTH_SHORT).show();
                 }
             });
             return null;

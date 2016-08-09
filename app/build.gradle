@@ -8,16 +8,11 @@ android {
         applicationId "me.dbarnett.acastus"
         minSdkVersion 19
         targetSdkVersion 24
-        versionCode 6
-        versionName "1.01"
+        versionCode 8
+        versionName "1.03"
     }
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-
-        playStore {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

@@ -27,11 +27,30 @@
 
     <string name="need_nav_app">You must have a Maps/Navigation App installed.</string>
 
+    <string name="my_current_location">My Current Location</string>
+
+    <string name="shared_location">Shared Location</string>
+
+    <string name="navigate">Navigate</string>
+
+    <string name="copy_address_place">Copy address/place to clipboard</string>
+
+    <string name="copy_gps">Copy GPS coordinates to clipboard</string>
+
+    <string name="share_this_location">Share this location</string>
+
+    <string name="share_my_location">Share my location</string>
+
+    <string name="copied_to_clipboard">Copied to clipboard</string>
+
+    <string name="search_address_place">Search for address/place</string>
+
+    <string name="share_address_place">Share address/place</string>
+
+    <string name="accessing_location">Accessing location...</string>
+
+    <string name="location_not_enabled">Location not enabled</string>
+
     <string name="donate_button">Donate</string>
 
-
-    <string-array name="theme">
-        <item>Light</item>
-        <item>Dark</item>
-    </string-array>
 </resources>

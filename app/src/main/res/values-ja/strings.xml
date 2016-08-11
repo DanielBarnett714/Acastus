@@ -1,0 +1,56 @@
+<resources>
+    <string name="app_name">Acastus</string>
+
+    <string name="action_settings">設定</string>
+
+    <string name="action_share_location">場所を共有</string>
+    <string name="title_activity_settings">設定</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">全般</string>
+
+    <string name="pref_header_server">サーバー</string>
+
+    <string name="allow_location_title">場所を許可する</string>
+    <string name="allow_location_description">あなたの場所を使用して、結果を戻します。</string>
+
+    <string name="store_recents_title">最近の結果を保存</string>
+    <string name="store_recents_description">最近の結果を保存して後で使用します。</string>
+
+
+    <string name="server_url_setting">サーバーアドレス</string>
+    <string name="server_url_default">https://search.mapzen.com</string>
+
+    <string name="clear_recents_setting">最近の結果をクリア</string>
+
+    <string name="need_nav_app">地図/ナビゲーションアプリをインストールする必要があります。</string>
+
+    <string name="my_current_location">私の現在の場所</string>
+
+    <string name="shared_location">共有した場所</string>
+
+    <string name="navigate">ナビゲート</string>
+
+    <string name="copy_address_place">住所/場所をクリップボードにコピー</string>
+
+    <string name="copy_gps">GPS 座標をクリップボードにコピー</string>
+
+    <string name="share_this_location">この場所を共有</string>
+
+    <string name="share_my_location">私の場所を共有</string>
+
+    <string name="copied_to_clipboard">クリップボードにコピーしました</string>
+
+    <string name="search_address_place">住所/場所の検索</string>
+
+    <string name="share_address_place">住所/場所の共有</string>
+
+    <string name="accessing_location">場所にアクセス中...</string>
+
+    <string name="location_not_enabled">場所が有効ではありません</string>
+
+    <string name="donate_button">寄付する</string>
+
+</resources>

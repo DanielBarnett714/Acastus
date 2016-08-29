@@ -233,7 +233,8 @@ public class MainActivity extends AppCompatActivity{
                 if (canNav) {
                     if (!lookupList.isEmpty()) {
                         ResultNode tempNode = lookupList.get(0);
-                        String geoCoords = "geo:" + tempNode.lat + "," + tempNode.lon;
+                        String geoCoords = "geo:" + tempNode.lat + "," + tempNode.lon + "?q="+ tempNode.lat + "," + tempNode.lon + "("+tempNode.name+")";
+                        geoCoords = geoCoords.replace(' ', '+');
                         openInNavApp(geoCoords);
                     }
                 }
@@ -490,7 +491,8 @@ public class MainActivity extends AppCompatActivity{
                 setRecents(tempNode.name);
                 EditText searchQuery = (EditText) findViewById(R.id.searchText);
                 searchQuery.setText(tempNode.name);
-                String geoCoords = "geo:" + tempNode.lat + "," + tempNode.lon;
+                String geoCoords = "geo:" + tempNode.lat + "," + tempNode.lon + "?q="+ tempNode.lat + "," + tempNode.lon + "("+tempNode.name+")";
+                geoCoords = geoCoords.replace(' ', '+');
                 openInNavApp(geoCoords);
             }
         });
@@ -513,12 +515,13 @@ public class MainActivity extends AppCompatActivity{
                         ResultNode tempNode = lookupList.get(position);
                         setRecents(tempNode.name);
                         if (which == 0){
-                            String geoCoords = "geo:" + tempNode.lat + "," + tempNode.lon;
+                            String geoCoords = "geo:" + tempNode.lat + "," + tempNode.lon + "?q="+ tempNode.lat + "," + tempNode.lon + "("+tempNode.name+")";
+                            geoCoords = geoCoords.replace(' ', '+');
                             openInNavApp(geoCoords);
                         }
 
                         if (which == 1){
-                            String shareBody = tempNode.name + "\n" + "geo:" + tempNode.lat + "," + tempNode.lon;
+                            String shareBody = tempNode.name + "\n" + "geo:" + tempNode.lat + "," + tempNode.lon + "?q="+ tempNode.lat + "," + tempNode.lon + "("+tempNode.name+")";
                             sharePlace(shareBody);
                         }
 

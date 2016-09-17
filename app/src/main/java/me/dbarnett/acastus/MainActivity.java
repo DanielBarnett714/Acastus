@@ -233,7 +233,7 @@ public class MainActivity extends AppCompatActivity{
                 if (canNav) {
                     if (!lookupList.isEmpty()) {
                         ResultNode tempNode = lookupList.get(0);
-                        String geoCoords = "geo:" + tempNode.lat + "," + tempNode.lon + "?q="+ tempNode.lat + "," + tempNode.lon + "("+tempNode.name+")";
+                        String geoCoords = addressString(tempNode.lat, tempNode.lon, tempNode.name);
                         geoCoords = geoCoords.replace(' ', '+');
                         openInNavApp(geoCoords);
                     }
@@ -265,7 +265,7 @@ public class MainActivity extends AppCompatActivity{
                 setRecents(tempNode.name);
                 searchText.setText("");
 
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + tempNode.lat + "," + tempNode.lon));
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(gpsString(tempNode.lat, tempNode.lon)));
                 try {
                     startActivity(browserIntent);
                 } catch (ActivityNotFoundException e) {
@@ -305,13 +305,38 @@ public class MainActivity extends AppCompatActivity{
             double lat = coordinates[0];
             double lon = coordinates[1];
 
-            String uri = "geo:" + lat + "," + lon + "?q=" + lat + "," + lon;
+            String uri = gpsString(lat, lon);
             String shareBody = getResources().getString(R.string.my_current_location) + ":\n" + uri;
             Intent sharingLocation = new Intent(android.content.Intent.ACTION_SEND);
             sharingLocation.setType("text/plain");
             sharingLocation.putExtra(android.content.Intent.EXTRA_SUBJECT, getResources().getString(R.string.my_current_location));
             sharingLocation.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
             startActivity(Intent.createChooser(sharingLocation, getResources().getString(R.string.share_my_location)));
+        }
+    }
+
+    protected String gpsString(double lat, double lon){
+        String location;
+        if (prefs.getBoolean("use_google", false) == true) {
+            location = "http://maps.google.com/maps?q=" + lat + "+" + lon;
+            return location;
+        }else {
+            location = "geo:" + lat + "," + lon + "?q=" + lat + "," + lon;
+            return location;
+        }
+    }
+
+    protected String addressString(double lat, double lon, String label){
+        String location;
+        label = label.replace(" " , "+");
+        label = label.replace("," , "+");
+        label = label.replace("++" , "+");
+        if (prefs.getBoolean("use_google", false) == true) {
+            location = "http://maps.google.com/maps?q=+" + lat + "+" + lon;
+            return location;
+        }else {
+            location = "geo:" + lat + "," + lon + "?q="+ lat + "+" + lon + "("+label+")";
+            return location;
         }
     }
 
@@ -384,6 +409,8 @@ public class MainActivity extends AppCompatActivity{
      */
     void handleSendText(Intent intent) {
         String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
+        sharedText = sharedText.replace("+", " ");
+        sharedText.replace("," , " ");
         if (sharedText != null) {
             EditText searchQuery = (EditText) findViewById(R.id.searchText);
             searchQuery.setText(sharedText);
@@ -402,7 +429,15 @@ public class MainActivity extends AppCompatActivity{
             String q = uri.getQuery();
             if (q != null) {
                 EditText searchQuery = (EditText) findViewById(R.id.searchText);
-                String addr = q.substring(q.indexOf("=") + 1).replace("\n", ",");
+                String addr = "";
+                addr = addr.replace("&", " ");
+                int indexLoc = q.indexOf("loc");
+                if (indexLoc >= 3){
+                    addr = q.substring(q.indexOf("=") + 1, indexLoc).replace("\n", " ");
+                }else{
+                    addr = q.substring(q.indexOf("=") + 1).replace("\n", " ");
+                }
+                addr = addr.replace("+", " ");
                 searchQuery.setText(addr);
                 startSearch();
             }
@@ -491,7 +526,7 @@ public class MainActivity extends AppCompatActivity{
                 setRecents(tempNode.name);
                 EditText searchQuery = (EditText) findViewById(R.id.searchText);
                 searchQuery.setText(tempNode.name);
-                String geoCoords = "geo:" + tempNode.lat + "," + tempNode.lon + "?q="+ tempNode.lat + "," + tempNode.lon + "("+tempNode.name+")";
+                String geoCoords = addressString(tempNode.lat, tempNode.lon, tempNode.name);
                 geoCoords = geoCoords.replace(' ', '+');
                 openInNavApp(geoCoords);
             }
@@ -515,13 +550,13 @@ public class MainActivity extends AppCompatActivity{
                         ResultNode tempNode = lookupList.get(position);
                         setRecents(tempNode.name);
                         if (which == 0){
-                            String geoCoords = "geo:" + tempNode.lat + "," + tempNode.lon + "?q="+ tempNode.lat + "," + tempNode.lon + "("+tempNode.name+")";
+                            String geoCoords = addressString(tempNode.lat, tempNode.lon, tempNode.name);
                             geoCoords = geoCoords.replace(' ', '+');
                             openInNavApp(geoCoords);
                         }
 
                         if (which == 1){
-                            String shareBody = tempNode.name + "\n" + "geo:" + tempNode.lat + "," + tempNode.lon + "?q="+ tempNode.lat + "," + tempNode.lon + "("+tempNode.name+")";
+                            String shareBody = tempNode.name + "\n" + addressString(tempNode.lat, tempNode.lon, tempNode.name);
                             sharePlace(shareBody);
                         }
 
@@ -531,7 +566,7 @@ public class MainActivity extends AppCompatActivity{
                         }
 
                         if (which == 3){
-                            String copyBody = "geo:" + tempNode.lat + "," + tempNode.lon;
+                            String copyBody = gpsString(tempNode.lat, tempNode.lon);
                             copyToClipboard(copyBody);
                         }
                     }
@@ -646,8 +681,13 @@ public class MainActivity extends AppCompatActivity{
             tempNode.lon = lon;
             tempNode.name = name;
             if (useLocation) {
-                Double distance = geoLocation.distance(curLat, lat, curLon, lon);
-                labels.add(name + " : " + distance + " mi");
+                Boolean kilometers = prefs.getBoolean("unit_length", false);
+                Double distance = geoLocation.distance(curLat, lat, curLon, lon, kilometers);
+                if (kilometers){
+                    labels.add(name + " : " + distance + " km");
+                }else{
+                    labels.add(name + " : " + distance + " mi");
+                }
             } else {
                 labels.add(name);
             }

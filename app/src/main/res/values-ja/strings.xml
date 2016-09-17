@@ -16,6 +16,12 @@
     <string name="allow_location_title">場所を許可する</string>
     <string name="allow_location_description">あなたの場所を使用して、結果を戻します。</string>
 
+    <string name="unit_length_title">使用キロ</string>
+    <string name="unit_lenth_description">使用キロの代わりにマイル</string>
+
+    <string name="use_google_title">GoogleマップのURLを使用します</string>
+    <string name="use_google_description">代わりに、ジオ・リンク・タイプのGoogleマップのURLを使用します</string>
+
     <string name="store_recents_title">最近の結果を保存</string>
     <string name="store_recents_description">最近の結果を保存して後で使用します。</string>
 

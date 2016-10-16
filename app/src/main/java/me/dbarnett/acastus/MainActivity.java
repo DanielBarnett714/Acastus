@@ -125,6 +125,9 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         useLocation = prefs.getBoolean("use_location", true);
+        if (prefs.getBoolean("app_theme", false)){
+            setTheme(R.style.DarkTheme_NoActionBar);
+        }
         super.onCreate(savedInstanceState);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);

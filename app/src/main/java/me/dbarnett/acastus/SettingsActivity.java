@@ -3,6 +3,7 @@ package me.dbarnett.acastus;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -101,6 +102,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (prefs.getBoolean("app_theme", false)){
+            setTheme(R.style.DarkTheme);
+        }
         super.onCreate(savedInstanceState);
         setupActionBar();
 

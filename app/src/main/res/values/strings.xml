@@ -25,6 +25,9 @@
     <string name="store_recents_title">Save Recents</string>
     <string name="store_recents_description">Save recent results for later use.</string>
 
+    <string name="pref_title_app_theme">App Theme</string>
+    <string name="pref_description_app_theme">Use Dark Theme</string>
+
 
     <string name="server_url_setting">Server Address</string>
     <string name="server_url_default">https://search.mapzen.com</string>

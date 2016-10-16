@@ -25,6 +25,13 @@
         android:summary="@string/store_recents_description"
         android:title="@string/store_recents_title" />
 
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="app_theme"
+        android:summary="@string/pref_description_app_theme"
+        android:title="@string/pref_title_app_theme" />
+
+
 
 
 </PreferenceScreen>

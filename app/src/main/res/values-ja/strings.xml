@@ -25,6 +25,8 @@
     <string name="store_recents_title">最近の結果を保存</string>
     <string name="store_recents_description">最近の結果を保存して後で使用します。</string>
 
+    <string name="pref_title_app_theme">アプリのテーマ</string>
+    <string name="pref_description_app_theme">ダークテーマを使用します</string>
 
     <string name="server_url_setting">サーバーアドレス</string>
     <string name="server_url_default">https://search.mapzen.com</string>

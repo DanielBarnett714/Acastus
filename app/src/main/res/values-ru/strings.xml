@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Acastus</string>
+
+    <string name="action_settings">Настройки</string>
+
+    <string name="action_share_location">Расшарить местоположение</string>
+    <string name="title_activity_settings">Настройки</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">Общие</string>
+
+    <string name="pref_header_server">Сервер</string>
+
+    <string name="allow_location_title">Разрешить местоположение</string>
+    <string name="allow_location_description">Исп-те ваше местоположение для результатов вокруг</string>
+
+    <string name="unit_length_title">Исп-ть километры</string>
+    <string name="unit_lenth_description">Исп-ть километры вместо миль</string>
+
+    <string name="use_google_title">Исп-ть Google Maps URL</string>
+    <string name="use_google_description">Исп-ть Google Maps URL вместо типа Geo link</string>
+
+    <string name="store_recents_title">Сохранить последние</string>
+    <string name="store_recents_description">Сохр-ть последн. рез-ты для дальн. исп-ия</string>
+
+    <string name="pref_title_app_theme">Тема приложения</string>
+    <string name="pref_description_app_theme">Исп-ть темную тему</string>
+
+
+    <string name="server_url_setting">Адрес сервера</string>
+
+    <string name="clear_recents_setting">Очистить недавние</string>
+
+    <string name="need_nav_app">Должно быть установлено навигационное приложение.</string>
+
+    <string name="my_current_location">Текущее местоположение</string>
+
+    <string name="shared_location">Расшаренное местоположение</string>
+
+    <string name="navigate">Навигация</string>
+
+    <string name="copy_address_place">Копировать адрес/место в буфер</string>
+
+    <string name="copy_gps">Копировать GPS координаты в буфер</string>
+
+    <string name="share_this_location">Расшарить это местоположение</string>
+
+    <string name="share_my_location">Расшарить мое местоположение</string>
+
+    <string name="copied_to_clipboard">Скопировано в буфер</string>
+
+    <string name="search_address_place">Поиск адреса/места</string>
+
+    <string name="share_address_place">Расшарить адрес/место</string>
+
+    <string name="accessing_location">Доступ к местоположению</string>
+
+    <string name="location_not_enabled">Местоположение не включено</string>
+
+    <string name="donate_button">Вознаградить</string>
+
+</resources>

@@ -1,5 +1,6 @@
 package me.dbarnett.acastus;
 
+import android.content.Context;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -10,24 +11,51 @@ import android.os.Looper;
 import android.widget.Toast;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Author: Daniel Barnett
  */
-public class GeoLocation extends MainActivity implements LocationListener{
+public class GeoLocation implements LocationListener{
     /**
      * The Location manager.
      */
-    LocationManager locationManager;
+    public LocationManager locationManager;
+
+    Context context;
+
 
     /**
      * Instantiates a new Geo location.
      *
      * @param locationManager the location manager
      */
-    GeoLocation(LocationManager locationManager){
+    GeoLocation(LocationManager locationManager, Context context) {
         this.locationManager = locationManager;
+        this.context = context;
+        updateLocation();
+
+
     }
+
+    public void updateLocation(){
+        Criteria criteria = new Criteria();
+        String bestProvider = String.valueOf(locationManager.getBestProvider(criteria, true)).toString();
+        try {
+            locationManager.requestLocationUpdates(bestProvider, 60000, 15, this);
+            Handler h = new Handler(Looper.getMainLooper());
+            h.post(new Runnable() {
+                public void run() {
+                    Toast.makeText(context, R.string.accessing_location, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }catch (SecurityException e){
+
+        }
+
+    }
+
 
 
     /**
@@ -96,7 +124,7 @@ public class GeoLocation extends MainActivity implements LocationListener{
                 }
                 else{
                     try{
-                        locationManager.requestLocationUpdates(bestProvider, 0, 0, this);
+                        updateLocation();
                         Handler h = new Handler(Looper.getMainLooper());
                         h.post(new Runnable() {
                             public void run() {
@@ -122,24 +150,17 @@ public class GeoLocation extends MainActivity implements LocationListener{
         }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        try {
-            locationManager.removeUpdates(this);
-        }catch (SecurityException e){
 
-        }
-    }
 
     @Override
     public void onLocationChanged(Location location) {
         try {
             locationManager.removeUpdates(this);
-
         }catch (SecurityException e){
 
         }
+
+
     }
 
     @Override
@@ -149,11 +170,11 @@ public class GeoLocation extends MainActivity implements LocationListener{
 
     @Override
     public void onProviderEnabled(String s) {
-      useLocation = true;
+      MainActivity.useLocation = true;
     }
 
     @Override
     public void onProviderDisabled(String s) {
-        useLocation = false;
+        MainActivity.useLocation = false;
     }
 }

@@ -30,7 +30,8 @@
 
 
     <string name="server_url_setting">Server Address</string>
-    <string name="server_url_default">https://search.mapzen.com</string>
+
+    <string name="server_url_default" translatable="false">https://search.mapzen.com</string>
 
     <string name="clear_recents_setting">Clear Recents</string>
 

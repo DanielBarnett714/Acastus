@@ -29,7 +29,6 @@
     <string name="pref_description_app_theme">ダークテーマを使用します</string>
 
     <string name="server_url_setting">サーバーアドレス</string>
-    <string name="server_url_default">https://search.mapzen.com</string>
 
     <string name="clear_recents_setting">最近の結果をクリア</string>
 

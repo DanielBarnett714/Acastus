@@ -8,8 +8,8 @@ android {
         applicationId "me.dbarnett.acastus"
         minSdkVersion 19
         targetSdkVersion 24
-        versionCode 11
-        versionName "1.06"
+        versionCode 12
+        versionName "1.10"
     }
     buildTypes {
         release {
@@ -25,4 +25,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.0.0'
     compile 'com.android.support:design:24.0.0'
     compile 'com.android.support:support-v4:24.0.0'
+    compile 'org.osmdroid:osmdroid-android:5.6.4'
 }

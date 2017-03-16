@@ -61,19 +61,20 @@ public class MainActivity extends AppCompatActivity{
     /**
      * The constant lookupList.
      */
-    private ArrayList<ResultNode> lookupList = new ArrayList<>();
+    public ArrayList<ResultNode> lookupList = new ArrayList<>();
     /**
      * The Can nav.
      */
     private boolean canNav = false;
+
     /**
      * The Cur lat.
      */
-    private double curLat;
+    public double curLat;
     /**
      * The Cur lon.
      */
-    private double curLon;
+    public double curLon;
 
     private Double[] geoCoordinates;
     /**
@@ -115,11 +116,13 @@ public class MainActivity extends AppCompatActivity{
     /**
      * The Use location.
      */
-    public Boolean useLocation;
+    public static Boolean useLocation;
 
     protected static Context context;
 
     LocationManager locationManager;
+
+    ImageButton mViewMapButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,9 +141,12 @@ public class MainActivity extends AppCompatActivity{
         context = getApplicationContext();
         setupLocationUse();
         getInputs();
+        setupMapButton();
         updateRecentsList();
         startTimer();
+
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
@@ -193,12 +199,53 @@ public class MainActivity extends AppCompatActivity{
         return super.onOptionsItemSelected(item);
     }
 
+    public void setupMapButton(){
+        mViewMapButton = (ImageButton) findViewById(R.id.imageButton);
+
+        mViewMapButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+
+                geoCoordinates = geoLocation.getLocation();
+                if (geoCoordinates != null) {
+                    curLat = geoCoordinates[0];
+                    curLon = geoCoordinates[1];
+                    Intent intent = new Intent(MainActivity.this, MapViewActivity.class);
+                    intent.putExtra("latitude", curLat);
+                    intent.putExtra("longitude", curLon);
+
+                    JSONArray jsonArray = new JSONArray();
+
+                    try{
+                        for (int i = 0; i < lookupList.size(); i++){
+                            JSONObject jsonObject = new JSONObject();
+                            jsonObject.put("name", lookupList.get(i).name);
+                            jsonObject.put("lat", lookupList.get(i).lat);
+                            jsonObject.put("lon", lookupList.get(i).lon);
+                            jsonArray.put(jsonObject);
+                        }
+
+                        intent.putExtra("lookup_list", jsonArray.toString());
+
+                    }catch (JSONException e){
+
+                    }
+                    startActivity(intent);
+                }
+
+
+            }
+        });
+    }
+
     /**
      * Get inputs.
      */
     void setupLocationUse(){
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        geoLocation = new GeoLocation(locationManager);
+        geoLocation = new GeoLocation(locationManager, getApplicationContext());
         ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         if (useLocation && isLocationEnabled()) {
             geoCoordinates = geoLocation.getLocation();
@@ -208,6 +255,7 @@ public class MainActivity extends AppCompatActivity{
             }
         }
     }
+
 
     private void getInputs() {
         searchText = (EditText) findViewById(R.id.searchText);
@@ -229,20 +277,9 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-        ImageButton navigate = (ImageButton) findViewById(R.id.imageButton);
-        navigate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (canNav) {
-                    if (!lookupList.isEmpty()) {
-                        ResultNode tempNode = lookupList.get(0);
-                        String geoCoords = addressString(tempNode.lat, tempNode.lon, tempNode.name);
-                        geoCoords = geoCoords.replace(' ', '+');
-                        openInNavApp(geoCoords);
-                    }
-                }
-            }
-        });
+
+
+
     }
 
     /**
@@ -300,6 +337,7 @@ public class MainActivity extends AppCompatActivity{
      */
     protected void shareLocation() {
         Double[] coordinates = null;
+        geoLocation.updateLocation();
         try {
             coordinates = geoLocation.getLocation();
         } catch (NullPointerException e) {
@@ -480,7 +518,7 @@ public class MainActivity extends AppCompatActivity{
      *
      * @param name the name
      */
-    private void setRecents(String name) {
+    public void setRecents(String name) {
         SharedPreferences.Editor editor = prefs.edit();
         if (prefs.getBoolean("store_recents", true) == false) {
             return;

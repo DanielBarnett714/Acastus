@@ -212,9 +212,11 @@ public class MainActivity extends AppCompatActivity{
                 if (geoCoordinates != null) {
                     curLat = geoCoordinates[0];
                     curLon = geoCoordinates[1];
-                    Intent intent = new Intent(MainActivity.this, MapViewActivity.class);
+                    Intent intent = new Intent(MainActivity.this, ViewMapActivity.class);
+
                     intent.putExtra("latitude", curLat);
                     intent.putExtra("longitude", curLon);
+
 
                     JSONArray jsonArray = new JSONArray();
 

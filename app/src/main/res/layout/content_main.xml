@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageButton"
-        android:src="@mipmap/pinpoint"
+        android:src="@mipmap/ic_marker"
         android:layout_alignRight="@+id/resultsList"
         android:layout_alignEnd="@+id/resultsList"
         android:layout_alignTop="@+id/searchText"

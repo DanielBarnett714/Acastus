@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.mapzen.tangram.MapView
+        android:id="@+id/map"
+        android:layout_width="wrap_content"
+        android:layout_height="0px"
+        android:layout_weight=".85"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight=".15">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_toStartOf="@+id/mapActions"
+            android:layout_height="wrap_content"
+            android:id="@+id/locationTitle"
+            android:layout_gravity="left"
+            android:textSize="20sp"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@+id/button"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/locationDesc"
+            android:layout_gravity="left"
+            android:textSize="16sp"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/locationTitle"
+            android:layout_toLeftOf="@+id/button"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/mapActions"
+            android:src="@mipmap/ic_navigation"
+            android:layout_gravity="right"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            style="@style/Base.Widget.AppCompat.ActionButton" />
+    </RelativeLayout>
+
+
+</LinearLayout>

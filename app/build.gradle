@@ -8,8 +8,8 @@ android {
         applicationId "me.dbarnett.acastus"
         minSdkVersion 19
         targetSdkVersion 24
-        versionCode 12
-        versionName "1.10"
+        versionCode 13
+        versionName "1.11"
     }
     buildTypes {
         release {
@@ -17,6 +17,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    sourceSets.main.assets.srcDirs = ['../styles']
 }
 
 dependencies {
@@ -25,5 +27,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.0.0'
     compile 'com.android.support:design:24.0.0'
     compile 'com.android.support:support-v4:24.0.0'
-    compile 'org.osmdroid:osmdroid-android:5.6.4'
+    compile 'com.mapzen.tangram:tangram:0.5.1'
 }

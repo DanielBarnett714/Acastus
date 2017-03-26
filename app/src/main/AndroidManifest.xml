@@ -51,11 +51,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="me.dbarnett.acastus.MainActivity" />
         </activity>
-        <activity android:name=".MapViewActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="me.dbarnett.acastus.MainActivity" />
-        </activity>
+        <activity android:name=".ViewMapActivity"></activity>
     </application>
 
 </manifest>

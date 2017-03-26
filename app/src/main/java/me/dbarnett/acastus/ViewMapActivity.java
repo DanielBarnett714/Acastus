@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PointF;
-import android.location.Location;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -144,12 +143,10 @@ public class ViewMapActivity extends AppCompatActivity implements MapView.OnMapR
 
             for (int i = 0; i < lookupList.length(); i++){
 
-                System.out.println();
                 Marker marker = markers.get(i);
                 marker.setStylingFromString(pointStyle);
                 LngLat lngLat = new LngLat();
                 JSONObject jsonObject = lookupList.getJSONObject(i);
-                System.out.println(jsonObject.get("name"));
                 lngLat.set(jsonObject.getDouble("lon"), jsonObject.getDouble("lat"));
                 marker.setPoint(lngLat);
                 marker.setDrawable(getResources().getDrawable(R.mipmap.ic_marker));
@@ -195,65 +192,65 @@ public class ViewMapActivity extends AppCompatActivity implements MapView.OnMapR
                         JSONObject jsonObject = lookupList.getJSONObject(i);
                         double distance = GeoLocation.distance(tap.latitude, jsonObject.getDouble("lat"), tap.longitude, jsonObject.getDouble("lon"), true);
 
-                    if (distance < .1 && distance < min) {
-                        TextView mLocationTitle = (TextView) findViewById(R.id.locationTitle);
-                        mLocationTitle.setText(jsonObject.getString("name").substring(0, lookupList.getJSONObject(i).getString("name").indexOf(',')));
-                        TextView mLocationDesc = (TextView) findViewById(R.id.locationDesc);
-                        mLocationDesc.setText(jsonObject.getString("name").substring(lookupList.getJSONObject(i).getString("name").indexOf(',')+2, jsonObject.getString("name").length()));
-                        min = distance;
-                        minName = jsonObject.getString("name");
-                        ImageButton imageButton = (ImageButton) findViewById(R.id.mapActions);
-                        final String[] geoCoords = {addressString(tap.latitude, tap.longitude, minName)};
-                        imageButton.setOnClickListener(new View.OnClickListener() {
+                        if (distance < .1 && distance < min) {
+                            TextView mLocationTitle = (TextView) findViewById(R.id.locationTitle);
+                            mLocationTitle.setText(jsonObject.getString("name").substring(0, lookupList.getJSONObject(i).getString("name").indexOf(',')));
+                            TextView mLocationDesc = (TextView) findViewById(R.id.locationDesc);
+                            mLocationDesc.setText(jsonObject.getString("name").substring(lookupList.getJSONObject(i).getString("name").indexOf(',')+2, jsonObject.getString("name").length()));
+                            min = distance;
+                            minName = jsonObject.getString("name");
+                            ImageButton imageButton = (ImageButton) findViewById(R.id.mapActions);
+                            final String[] geoCoords = {addressString(tap.latitude, tap.longitude, minName)};
+                            imageButton.setOnClickListener(new View.OnClickListener() {
 
-                            @Override
-                            public void onClick(View v) {
+                                @Override
+                                public void onClick(View v) {
 
-                                geoCoords[0] = geoCoords[0].replace(' ', '+');
-                                openInNavApp(geoCoords[0]);
+                                    geoCoords[0] = geoCoords[0].replace(' ', '+');
+                                    openInNavApp(geoCoords[0]);
 
-                            }
-                        });
+                                }
+                            });
 
-                        imageButton.setOnLongClickListener(new View.OnLongClickListener() {
-                            @Override
-                            public boolean onLongClick(View v) {
-                                CharSequence list_options[] = new CharSequence[]{getResources().getString(R.string.navigate), getResources().getString(R.string.share_this_location), getResources().getString(R.string.copy_address_place), getResources().getString(R.string.copy_gps)};
-                                AlertDialog.Builder builder = new AlertDialog.Builder(ViewMapActivity.this);
-                                builder.setTitle("Choose option");
+                            imageButton.setOnLongClickListener(new View.OnLongClickListener() {
+                                @Override
+                                public boolean onLongClick(View v) {
+                                    CharSequence list_options[] = new CharSequence[]{getResources().getString(R.string.navigate), getResources().getString(R.string.share_this_location), getResources().getString(R.string.copy_address_place), getResources().getString(R.string.copy_gps)};
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(ViewMapActivity.this);
+                                    builder.setTitle("Choose option");
 
-                                builder.setItems(list_options, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        if (which == 0) {
-                                            geoCoords[0] = geoCoords[0].replace(' ', '+');
-                                            openInNavApp(geoCoords[0]);
+                                    builder.setItems(list_options, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            if (which == 0) {
+                                                geoCoords[0] = geoCoords[0].replace(' ', '+');
+                                                openInNavApp(geoCoords[0]);
+                                            }
+
+                                            if (which == 1) {
+                                                String shareBody = "home" + "\n" + geoCoords[0];
+                                                sharePlace(shareBody);
+                                            }
+
+                                            if (which == 2) {
+                                                String copyBody = "Home";
+                                                copyToClipboard(copyBody);
+                                            }
+
+                                            if (which == 3) {
+                                                String copyBody = gpsString(tap.latitude, tap.longitude);
+                                                copyToClipboard(copyBody);
+                                            }
+                                            return;
                                         }
+                                    });
+                                    builder.show();
 
-                                        if (which == 1) {
-                                            String shareBody = "home" + "\n" + geoCoords[0];
-                                            sharePlace(shareBody);
-                                        }
+                                    return true;
+                                }
 
-                                        if (which == 2) {
-                                            String copyBody = "Home";
-                                            copyToClipboard(copyBody);
-                                        }
-
-                                        if (which == 3) {
-                                            String copyBody = gpsString(tap.latitude, tap.longitude);
-                                            copyToClipboard(copyBody);
-                                        }
-                                        return;
-                                    }
-                                });
-                                builder.show();
-
-                                return true;
-                            }
-
-                        });
-                    }
+                            });
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

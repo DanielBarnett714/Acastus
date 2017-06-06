@@ -779,9 +779,9 @@ public class MainActivity extends AppCompatActivity{
         }
         String searchQuery;
         if (useLocation) {
-            searchQuery = serverAddress + "/v1/autocomplete?" + "focus.point.lat=" + curLat + "&focus.point.lon=" + curLon + "&text=" + input;
+            searchQuery = serverAddress + "/v1/autocomplete?" + "focus.point.lat=" + curLat + "&focus.point.lon=" + curLon + "&text=" + input + "&api_key=" + prefs.getString("api_key", "");
         } else {
-            searchQuery = serverAddress + "/v1/autocomplete?text=" + input;
+            searchQuery = serverAddress + "/v1/autocomplete?text=" + input + "&api_key=" + prefs.getString("api_key", "");
         }
         System.out.println(searchQuery);
         searchQuery = searchQuery.replace(' ', '+');

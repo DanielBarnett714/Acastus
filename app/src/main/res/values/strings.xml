@@ -33,6 +33,8 @@
 
     <string name="server_url_default" translatable="false">https://search.mapzen.com</string>
 
+    <string name="api_key_setting" translatable="false">API Key</string>
+
     <string name="clear_recents_setting">Clear Recents</string>
 
     <string name="need_nav_app">You must have a Maps/Navigation App installed.</string>

@@ -85,7 +85,7 @@ public class ViewMapActivity extends AppCompatActivity implements MapView.OnMapR
         curLon = intent.getExtras().getDouble("longitude");
 
         if (prefs.getBoolean("app_theme", false)){
-            mapView.getMapAsync(this, "cinnabar-style-gh-pages/cinnabar-style-dark.yaml");
+            mapView.getMapAsync(this, "tron-style-4.0.0/tron-style.yaml");
         }else {
             mapView.getMapAsync(this, "cinnabar-style-gh-pages/cinnabar-style.yaml");
         }

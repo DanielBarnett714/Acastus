@@ -10,4 +10,12 @@
         android:singleLine="true"
         android:title="@string/server_url_setting" />
 
+    <EditTextPreference
+        android:inputType="text"
+        android:key="api_key"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/api_key_setting" />
+
 </PreferenceScreen>
